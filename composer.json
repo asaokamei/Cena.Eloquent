@@ -1,0 +1,20 @@
+{
+    "name": "cena/eloquent",
+    "description": "Cena EmAdapter for Eloquent ORM.",
+    "authors": [
+        {
+            "name": "Asao",
+            "email": "kamei@workspot.jp"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "cena/cena": "dev-master",
+        "illuminate/database": "4.1.*"
+    },
+    "autoload":{
+        "psr-4": {
+            "Cena\\Eloquent\\":"src/"
+        }
+    }
+}
