@@ -65,6 +65,7 @@ class EmaEloquent implements EmAdapterInterface
     public function clear()
     {
         $this->entities = array();
+        $this->toDelete = array();
     }
 
     /**

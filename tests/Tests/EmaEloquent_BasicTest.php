@@ -106,4 +106,19 @@ class EmaEloquent_BasicTest extends \PHPUnit_Framework_TestCase
         $entity = $this->ema->newEntity( 'Post', 1 );
         $this->assertEquals( false, $this->ema->isRetrieved( $entity ) );
     }
+
+    /**
+     * @test
+     */
+    function delete_removes_data_from_db()
+    {
+        $entity = $this->ema->findEntity( 'Post', 1 );
+        $this->assertEquals( true, $this->ema->isRetrieved( $entity ) );
+        $this->ema->deleteEntity( $entity );
+        $this->assertEquals( true, $this->ema->isDeleted( $entity ) );
+        $this->ema->save();
+
+        $entity = \Post::find( 1 );
+        $this->assertEquals( null, $entity );
+    }
 }
