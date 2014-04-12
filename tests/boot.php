@@ -39,3 +39,10 @@ require_once( __DIR__.'/database/migrations/create_post_table.php' );
 require_once( __DIR__.'/database/migrations/create_comment_table.php' );
 require_once( __DIR__.'/database/migrations/create_tag_table.php' );
 require_once( __DIR__.'/database/migrations/create_post_tag_table.php' );
+
+require_once( __DIR__.'/database/seeds/DatabaseSeeder.php' );
+
+require_once( __DIR__.'/models/Post.php' );
+require_once( __DIR__.'/models/Comment.php' );
+require_once( __DIR__.'/models/Tag.php' );
+require_once( __DIR__.'/models/PostTag.php' );

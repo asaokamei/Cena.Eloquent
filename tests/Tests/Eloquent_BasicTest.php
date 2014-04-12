@@ -17,6 +17,8 @@ class Eloquent_BasicTest extends \PHPUnit_Framework_TestCase
             $post->down();
             $post->up();
         }
+        $seeder = new \DatabaseSeeder;
+        $seeder->run();
     }
     
     function test0()

@@ -1,5 +1,10 @@
 <?php
 
+use Illuminate\Database\Capsule\Manager as Capsule;
+use Illuminate\Database\Seeder;
+use Illuminate\Database\Eloquent\Model as Eloquent;
+use Illuminate\Support\Facades\DB;
+
 class DatabaseSeeder extends Seeder
 {
 
@@ -24,7 +29,7 @@ class PostTableSeeder extends Seeder
 {
     public function run()
     {
-        DB::table( 'post' )->truncate();
+        Capsule::table( 'post' )->truncate();
 
         Post::create( array(
             'title'     => 'this is Laravel Blog',
@@ -46,7 +51,7 @@ class CommentTableSeeder extends Seeder
 {
     public function run()
     {
-        DB::table( 'comment' )->truncate();
+        Capsule::table( 'comment' )->truncate();
 
         Comment::create( array(
             'status'  => Comment::STATUS_PUBLIC,
@@ -72,7 +77,7 @@ class TagTableSeeder extends Seeder
 {
     public function run()
     {
-        DB::table( 'tag' )->truncate();
+        Capsule::table( 'tag' )->truncate();
 
         Tag::create( array(
             'tag' => 'php'
@@ -92,7 +97,7 @@ class PostTagTableSeeder extends Seeder
 {
     public function run()
     {
-        DB::table( 'post_tag' )->truncate();
+        Capsule::table( 'post_tag' )->truncate();
 
         PostTag::create( array(
             'post_id' => 1,
