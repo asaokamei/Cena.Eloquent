@@ -20,7 +20,22 @@ $capsule->addConnection(array(
     'password'  => 'admin',
     'charset'   => 'utf8',
     'collation' => 'utf8_unicode_ci',
-    'prefix'    => ''
+    'prefix'    => 'test_'
 ));
 
+use Illuminate\Events\Dispatcher;
+use Illuminate\Container\Container;
+$capsule->setEventDispatcher(new Dispatcher(new Container));
+
+// Set the cache manager instance used by connections... (optional)
+//    $capsule->setCacheManager(...);
+
+// Make this Capsule instance available globally via static methods... (optional)
+$capsule->setAsGlobal();
+
 $capsule->bootEloquent();
+
+require_once( __DIR__.'/database/migrations/create_post_table.php' );
+require_once( __DIR__.'/database/migrations/create_comment_table.php' );
+require_once( __DIR__.'/database/migrations/create_tag_table.php' );
+require_once( __DIR__.'/database/migrations/create_post_tag_table.php' );
