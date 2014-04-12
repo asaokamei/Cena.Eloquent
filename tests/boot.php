@@ -9,6 +9,8 @@ if( file_exists( dirname(__DIR__).'/vendor' ) ) {
 require_once( TEST_VENDOR_DIR . '/autoload.php' );
 
 use Illuminate\Database\Capsule\Manager as Capsule;
+use Illuminate\Events\Dispatcher;
+use Illuminate\Container\Container;
 
 $capsule = new Capsule;
 
@@ -23,8 +25,6 @@ $capsule->addConnection(array(
     'prefix'    => 'test_'
 ));
 
-use Illuminate\Events\Dispatcher;
-use Illuminate\Container\Container;
 $capsule->setEventDispatcher(new Dispatcher(new Container));
 
 // Set the cache manager instance used by connections... (optional)
@@ -34,6 +34,10 @@ $capsule->setEventDispatcher(new Dispatcher(new Container));
 $capsule->setAsGlobal();
 
 $capsule->bootEloquent();
+
+/*
+ * read classes and files for testing. 
+ */
 
 require_once( __DIR__.'/database/migrations/create_post_table.php' );
 require_once( __DIR__.'/database/migrations/create_comment_table.php' );
