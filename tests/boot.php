@@ -8,32 +8,6 @@ if( file_exists( dirname(__DIR__).'/vendor' ) ) {
 }
 require_once( TEST_VENDOR_DIR . '/autoload.php' );
 
-use Illuminate\Database\Capsule\Manager as Capsule;
-use Illuminate\Events\Dispatcher;
-use Illuminate\Container\Container;
-
-$capsule = new Capsule;
-
-$capsule->addConnection(array(
-    'driver'    => 'mysql',
-    'host'      => 'localhost',
-    'database'  => 'cena_laravel',
-    'username'  => 'admin',
-    'password'  => 'admin',
-    'charset'   => 'utf8',
-    'collation' => 'utf8_unicode_ci',
-    'prefix'    => 'test_'
-));
-
-$capsule->setEventDispatcher(new Dispatcher(new Container));
-
-// Set the cache manager instance used by connections... (optional)
-//    $capsule->setCacheManager(...);
-
-// Make this Capsule instance available globally via static methods... (optional)
-$capsule->setAsGlobal();
-
-$capsule->bootEloquent();
 
 /*
  * read classes and files for testing. 

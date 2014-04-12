@@ -6,9 +6,14 @@ use Cena\Eloquent\Factory;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 use Illuminate\Support\Collection;
 
+require_once( dirname(__DIR__).'/boot.php' );
+require_once( __DIR__.'/SetUpsTrait.php' );
+
 
 class EmaEloquent_BasicTest extends \PHPUnit_Framework_TestCase
 {
+    use SetUpsTrait;
+
     /**
      * @var EmaEloquent
      */
@@ -16,20 +21,7 @@ class EmaEloquent_BasicTest extends \PHPUnit_Framework_TestCase
 
     public static function setUpBeforeClass()
     {
-        require_once( dirname(__DIR__).'/boot.php' );
-        $tables = array(
-            '\CreatePostTable',
-            '\CreateCommentTable',
-            '\CreateTagTable',
-            '\CreatePostTagTable',
-        );
-        foreach( $tables as $t ) {
-            $post = new $t;
-            $post->down();
-            $post->up();
-        }
-        $seeder = new \DatabaseSeeder;
-        $seeder->run();
+        self::setupDb();
     }
 
     function setUp()
