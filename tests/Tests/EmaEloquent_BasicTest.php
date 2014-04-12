@@ -121,4 +121,17 @@ class EmaEloquent_BasicTest extends \PHPUnit_Framework_TestCase
         $entity = \Post::find( 1 );
         $this->assertEquals( null, $entity );
     }
+
+    /**
+     * @test
+     */
+    function isCollection_returns_true_for_non_entities()
+    {
+        $entity = $this->ema->findEntity( 'Post', 2 );
+        $this->assertEquals( false, $this->ema->isCollection( $entity ) );
+
+        $this->assertEquals( false, $this->ema->isCollection( null ) );
+        $this->assertEquals( false, $this->ema->isCollection( array() ) );
+    }
+    
 }
