@@ -1,6 +1,8 @@
 <?php
 namespace Tests;
 
+use Cena\Cena\Factory as CenaFactory;
+use Cena\Eloquent\Factory;
 use Illuminate\Database\Capsule\Manager as Capsule;
 use Illuminate\Events\Dispatcher;
 use Illuminate\Container\Container;
@@ -14,6 +16,9 @@ trait SetUpsTrait
         static::addSeeds();
     }
 
+    /**
+     * set up Eloquent ORM as global Capsule. 
+     */
     public static function setUpEloquent()
     {
 
@@ -38,7 +43,10 @@ trait SetUpsTrait
         $capsule->bootEloquent();
 
     }
-    
+
+    /**
+     * set up database tables; drop and create tables. 
+     */
     public static function setDbTables()
     {
         $tables = array(
@@ -53,11 +61,29 @@ trait SetUpsTrait
             $post->up();
         }
     }
-    
+
+    /**
+     * add seeds (sample data) into db tables. 
+     */
     public static function addSeeds()
     {
         require_once( dirname(__DIR__).'/boot.php' );
         $seeder = new \DatabaseSeeder;
         $seeder->run();
+    }
+
+    /**
+     * set up CenaManager using Eloquent-EntityManager-Adapter. 
+     * 
+     * @return \Cena\Cena\CenaManager
+     */
+    public static function setCm()
+    {
+        $ema = Factory::buildEmaEloquent();
+        $cm  = CenaFactory::buildCenaManager( $ema );
+        $cm->setClass( 'Post' );
+        $cm->setClass( 'Comment' );
+        $cm->setClass( 'Tag' );
+        return $cm;
     }
 }
