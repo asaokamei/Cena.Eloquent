@@ -8,6 +8,14 @@ use Illuminate\Support\Collection;
 require_once( dirname(__DIR__).'/boot.php' );
 require_once( __DIR__.'/SetUpsTrait.php' );
 
+/**
+ * Class Eloquent_BasicTest
+ * 
+ * This test ensures the models are working correctly, 
+ * as well as getting used to Eloquent ORM. 
+ *
+ * @package Tests
+ */
 class Eloquent_BasicTest extends \PHPUnit_Framework_TestCase
 {
     use SetUpsTrait;
@@ -85,5 +93,48 @@ class Eloquent_BasicTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals( 'Illuminate\Database\Eloquent\Collection', get_class($comments) );
         $this->assertEquals( '4', count($comments) );
         $this->assertEquals( $content, $comments[3]->comment );
+    }
+
+    /**
+     * @test
+     */
+    function BelongsToMany()
+    {
+        // get post from db. 
+        $post = \Post::find(1);
+        $tags = $post->tags;
+        $this->assertEquals( 'Illuminate\Database\Eloquent\Collection', get_class($tags) );
+        $this->assertEquals( '2', count($tags) );
+        
+        // create new tag and associate to the post (and save!)
+        $content = 'tag:'.mt_rand(1000,9999);
+        $tag4 = new \Tag( array('tag'=>$content) );
+        $post->tags()->save( $tag4 );
+
+        // is it associated? get the same post from db, again. 
+        $post = \Post::find(1);
+        /** @var \Illuminate\Database\Eloquent\Collection $tags */
+        $tags = $post->tags;
+        $this->assertEquals( 'Illuminate\Database\Eloquent\Collection', get_class($tags) );
+        $this->assertEquals( '3', count($tags) );
+        $this->assertEquals( $content, $tags[2]->tag );
+        
+        // OK, get the 3rd tag that is not associated with the post.
+        $tag3 = \Tag::find(3);
+        $this->assertEquals( 'Tag', get_class($tag3) );
+        $this->assertEquals( null, $tags->find( $tag3 ) ); // it's not in the association.
+        
+        // let's associate the 3rd and 4th tags to the post. 
+        $new_tags = array( $tag3, $tag4 );
+        $post->tags()->detach();
+        $post->tags()->saveMany( $new_tags );
+
+        // is it associated? get the same post from db, again. 
+        $post = \Post::find(1);
+        /** @var \Illuminate\Database\Eloquent\Collection $tags */
+        $tags = $post->tags;
+        $this->assertEquals( 'Illuminate\Database\Eloquent\Collection', get_class($tags) );
+        $this->assertEquals( '2', count($tags) );
+        $this->assertEquals( $content, $tags[1]->tag );
     }
 }
