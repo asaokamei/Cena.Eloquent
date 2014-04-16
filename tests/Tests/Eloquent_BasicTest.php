@@ -137,4 +137,20 @@ class Eloquent_BasicTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals( '2', count($tags) );
         $this->assertEquals( $content, $tags[1]->tag );
     }
+
+    /**
+     * @test
+     */
+    function finding_relation_types()
+    {
+        $post = \Post::find(1);
+        $relation = $post->comments();
+        $this->assertEquals( 'Illuminate\Database\Eloquent\Relations\HasMany', get_class($relation) );
+        $relation = $post->tags();
+        $this->assertEquals( 'Illuminate\Database\Eloquent\Relations\BelongsToMany', get_class($relation) );
+
+        $comment = \Comment::find(1);
+        $relation = $comment->post();
+        $this->assertEquals( 'Illuminate\Database\Eloquent\Relations\BelongsTo', get_class($relation) );
+    }
 }
