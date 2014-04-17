@@ -2,7 +2,9 @@
 namespace Cena\Eloquent;
 
 use Cena\Cena\EmAdapter\EmAdapterInterface;
-use Eloquent;
+use Illuminate\Database\Eloquent\Model as Eloquent;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class EmaEloquent implements EmAdapterInterface
 {
@@ -150,6 +152,48 @@ class EmaEloquent implements EmAdapterInterface
         if( is_object( $object ) ) {
             return $object instanceof Eloquent;
         }
-        return false;
+        return true;
+    }
+
+    /**
+     * relate the $object with $target as $name association.
+     * return true if handled in this method, or return false.
+     *
+     * @param object $object
+     * @param string $name
+     * @param object $target
+     * @return bool
+     */
+    public function relate( $object, $name, $target )
+    {
+        if( !$relation = $object->$name() ) {
+            return false;
+        }
+        $type = get_class( $relation );
+        $type = substr( $type, strlen( 'Illuminate\Database\Eloquent\Relations\\' ) );
+        
+        // for BelongsTo relation. 
+        if( $type == 'BelongsTo' ) {
+            /** @var BelongsTo $relation */
+            if( $this->isCollection( $target ) ) {
+                $target = $target[0];
+            }
+            $relation->associate( $target );
+            return true;
+        }
+        // for HasOne, HasMany or BelongsToMany.
+        /** @var BelongsToMany $relation */
+        if( !$this->isCollection( $target ) ) {
+            // $target is an entity. save it as part of the relation. 
+            $relation->save( $target );
+            return true;
+        }
+        // OK, the $target is a collection. 
+        if( $type == 'BelongsToMany' ) {
+            // for many-to-many relation, remove all the existing ones. 
+            $relation->detach();
+        }
+        $relation->saveMany( $target );
+        return true;
     }
 }
