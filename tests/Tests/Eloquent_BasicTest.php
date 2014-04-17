@@ -60,6 +60,7 @@ class Eloquent_BasicTest extends \PHPUnit_Framework_TestCase
     function belongsTo_relation_using_associate_and_save()
     {
         // get post from db. 
+        /** @var \Post $post */
         $post = \Post::find(1);
         $this->assertEquals( 'Post', get_class( $post ) );
         
@@ -101,6 +102,7 @@ class Eloquent_BasicTest extends \PHPUnit_Framework_TestCase
     function BelongsToMany()
     {
         // get post from db. 
+        /** @var \Post $post */
         $post = \Post::find(1);
         $tags = $post->tags;
         $this->assertEquals( 'Illuminate\Database\Eloquent\Collection', get_class($tags) );
@@ -143,12 +145,14 @@ class Eloquent_BasicTest extends \PHPUnit_Framework_TestCase
      */
     function finding_relation_types()
     {
+        /** @var \Post $post */
         $post = \Post::find(1);
         $relation = $post->comments();
         $this->assertEquals( 'Illuminate\Database\Eloquent\Relations\HasMany', get_class($relation) );
         $relation = $post->tags();
         $this->assertEquals( 'Illuminate\Database\Eloquent\Relations\BelongsToMany', get_class($relation) );
 
+        /** @var \Comment $comment */
         $comment = \Comment::find(1);
         $relation = $comment->post();
         $this->assertEquals( 'Illuminate\Database\Eloquent\Relations\BelongsTo', get_class($relation) );
