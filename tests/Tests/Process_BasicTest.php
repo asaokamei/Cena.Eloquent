@@ -33,17 +33,8 @@ class Process_BasicTest extends \PHPUnit_Framework_TestCase
         $this->cm = self::setCm();
         $this->process = Factory::buildProcess( $this->cm );
     }
-
-    function test0()
-    {
-        $this->assertEquals( 'Cena\Cena\CenaManager', get_class( $this->cm ) );
-        $this->assertEquals( 'Cena\Cena\Process',     get_class( $this->process ) );
-    }
-
-    /**
-     * @test
-     */
-    function process_cena_input()
+    
+    function getCase1()
     {
         $md_content = 'content:'.mt_rand(1000,9999);
         $md_comment = 'comment:'.mt_rand(1000,9999);
@@ -63,6 +54,23 @@ class Process_BasicTest extends \PHPUnit_Framework_TestCase
                 ),
             ),
         );
+        return $input;
+    }
+
+    function test0()
+    {
+        $this->assertEquals( 'Cena\Cena\CenaManager', get_class( $this->cm ) );
+        $this->assertEquals( 'Cena\Cena\Process',     get_class( $this->process ) );
+    }
+
+    /**
+     * @test
+     */
+    function process_cena_input()
+    {
+        $input = $this->getCase1();
+        $md_content = $input['post.0.1']['prop']['content'];
+        $md_comment = $input['comment.0.1']['prop']['comment'];
         $this->process->process( $input );
         
         /*
@@ -91,5 +99,17 @@ class Process_BasicTest extends \PHPUnit_Framework_TestCase
         $post = $comments[0]->post;
         $this->assertEquals( 'Post', get_class( $post ) );
         $this->assertSame( $posts[0], $post );
+    }
+
+    /**
+     * @test
+     */
+    function process_and_save()
+    {
+        $input = $this->getCase1();
+        $md_content = $input['post.0.1']['prop']['content'];
+        $md_comment = $input['comment.0.1']['prop']['comment'];
+        $this->process->process( $input );
+        $this->cm->save();
     }
 }
