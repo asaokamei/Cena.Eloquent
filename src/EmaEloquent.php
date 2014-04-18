@@ -150,7 +150,7 @@ class EmaEloquent implements EmAdapterInterface
     public function isCollection( $object )
     {
         if( is_object( $object ) ) {
-            return $object instanceof Eloquent;
+            return !$object instanceof Eloquent;
         }
         return true;
     }
