@@ -157,4 +157,76 @@ class Eloquent_BasicTest extends \PHPUnit_Framework_TestCase
         $relation = $comment->post();
         $this->assertEquals( 'Illuminate\Database\Eloquent\Relations\BelongsTo', get_class($relation) );
     }
+
+    /**
+     * @test
+     * @expectedException \Illuminate\Database\QueryException
+     */
+    function new_entity_relation_fails()
+    {
+        /** @var \Post $post */
+        /** @var \Comment $comment */
+        $post = new \Post;
+        $comment = new \Comment;
+        $post->comments()->save($comment);
+    }
+
+    /**
+     * @test
+     * @expectedException \Illuminate\Database\QueryException
+     */
+    function new_entity_relation_fails2()
+    {
+        /** @var \Post $post */
+        /** @var \Comment $comment */
+        $post = new \Post;
+        $comment = new \Comment;
+        $comment->post()->associate($post);
+        $post->save();
+        $comment->save();
+    }
+
+    /**
+     * @test
+     * @expectedException \Illuminate\Database\QueryException
+     */
+    function new_entity_relation_fails3()
+    {
+        /** @var \Post $post */
+        /** @var \Comment $comment */
+        $post = new \Post;
+        $comment = new \Comment;
+        $comment->post()->associate($post);
+        $comment->save();
+        $this->assertTrue(false, 'should not reach here. ' );
+        $post->save();
+    }
+
+    /**
+     * @test
+     */
+    function create_entity_relation_works()
+    {
+        /** @var \Post $post */
+        /** @var \Comment $comment */
+        $post = \Post::create(array());
+        $comment = \Comment::create(array());
+        $post->comments()->save($comment);
+        $post->save();
+        $comment->save();
+    }
+
+    /**
+     * @test
+     */
+    function create_entity_relation_works2()
+    {
+        /** @var \Post $post */
+        /** @var \Comment $comment */
+        $post = \Post::create(array());
+        $comment = \Comment::create(array());
+        $post->comments()->save($comment);
+        $comment->save();
+        $post->save();
+    }
 }

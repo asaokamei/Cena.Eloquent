@@ -78,8 +78,8 @@ class EmaEloquent implements EmAdapterInterface
     public function newEntity( $class )
     {
         /** @var Eloquent|string $class */
-        // $entity = $class::create(array());
-        $entity = new $class;
+        $entity = $class::create(array());
+        //$entity = new $class;
         $this->emStore( $entity );
         return $entity;
     }
