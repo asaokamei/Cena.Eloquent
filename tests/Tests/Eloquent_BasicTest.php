@@ -229,4 +229,20 @@ class Eloquent_BasicTest extends \PHPUnit_Framework_TestCase
         $comment->save();
         $post->save();
     }
+
+    /**
+     * @test
+     */
+    function compare_new_and_create()
+    {
+        $post1 = \Post::create(array());
+        $post2 = new \Post;
+        foreach( $post1 as $key => $val ) {
+            if( in_array($key, array('exists'))) continue;
+            $this->assertEquals( $val, $post2->$key, "diff at $key" );
+        }
+        $this->assertTrue(true);
+        $this->assertNotEquals( null, $post1->getKey() );
+        $this->assertEquals( null, $post2->getKey() );
+    }
 }
