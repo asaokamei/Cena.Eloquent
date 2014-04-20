@@ -44,13 +44,21 @@ class Process_BasicTest extends \PHPUnit_Framework_TestCase
                     'title' => 'title:'.md5(uniqid()),
                     'content' => $md_content,
                 ),
+                'link' => array(
+                    'comments' => 'comment.0.2'
+                ),
             ),
             'comment.0.1' => array(
                 'prop' => array(
-                    'comment' => $md_comment,
+                    'comment' => $md_comment.'1',
                 ),
                 'link' => array(
                     'post' => 'post.0.1'
+                ),
+            ),
+            'comment.0.2' => array(
+                'prop' => array(
+                    'comment' => $md_comment.'2',
                 ),
             ),
         );
@@ -72,6 +80,9 @@ class Process_BasicTest extends \PHPUnit_Framework_TestCase
         $md_content = $input['post.0.1']['prop']['content'];
         $md_comment = $input['comment.0.1']['prop']['comment'];
         $this->process->process( $input );
+        $this->cm->save();
+
+        $post_id = $this->cm->fetch('post.0.1')->getKey();
         
         /*
          * check the process.
@@ -79,26 +90,24 @@ class Process_BasicTest extends \PHPUnit_Framework_TestCase
         
         // get post and check it. 
         /** @var \Post[] $posts */
-        $posts = $this->cm->getCollection()->findByModel('post');
-        $this->assertEquals( true, is_array( $posts ) );
-        $this->assertEquals( 1, count( $posts ) );
-        
-        $this->assertEquals( 'Post', get_class( $posts[0] ) );
-        $this->assertEquals( $md_content, $posts[0]->content );
+        $post = \Post::find( $post_id );
+        $this->assertEquals( 'Post', get_class( $post ) );
+        $this->assertEquals( $md_content, $post->content );
         
         // get comment and check it.
-        /** @var HasMany $comments */
-        $comments = $this->cm->getCollection()->findByModel('comment');
-        $this->assertEquals( true, is_array( $comments ) );
-        $this->assertEquals( 1, count( $comments ) );
+        /** @var \Comment[] $comments */
+        $comments = $post->comments;
+        $this->assertEquals( true, $comments instanceof \ArrayAccess );
+        $this->assertEquals( 2, count( $comments ) );
         
         $this->assertEquals( 'Comment', get_class( $comments[0] ) );
-        $this->assertEquals( $md_comment, $comments[0]->comment );
+        $this->assertEquals( $md_comment, $comments[1]->comment );
         
         // is comment related to the post?
-        $post = $comments[0]->post;
-        $this->assertEquals( 'Post', get_class( $post ) );
-        $this->assertSame( $posts[0], $post );
+        $post2 = $comments[0]->post;
+        $post3 = $comments[1]->post;
+        $this->assertEquals( $post->getKey(), $post2->getKey() );
+        $this->assertEquals( $post->getKey(), $post3->getKey() );
     }
 
     /**
