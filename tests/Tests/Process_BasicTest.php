@@ -45,7 +45,8 @@ class Process_BasicTest extends \PHPUnit_Framework_TestCase
                     'content' => $md_content,
                 ),
                 'link' => array(
-                    'comments' => 'comment.0.2'
+                    'comments' => 'comment.0.2',
+                    'tags' => 'tag.0.2'
                 ),
             ),
             'comment.0.1' => array(
@@ -60,6 +61,13 @@ class Process_BasicTest extends \PHPUnit_Framework_TestCase
                 'prop' => array(
                     'comment' => $md_comment.'2',
                 ),
+            ),
+            'tag.0.1' => array(
+                'prop' => array( 'tag' => 'tag:'.mt_rand(1000,9999) ),
+                'link' => array( 'posts' => 'post.0.1' ),
+            ),
+            'tag.0.2' => array(
+                'prop' => array( 'tag' => 'tag:'.mt_rand(1000,9999) ),
             ),
         );
         return $input;
@@ -108,6 +116,14 @@ class Process_BasicTest extends \PHPUnit_Framework_TestCase
         $post3 = $comments[1]->post;
         $this->assertEquals( $post->getKey(), $post2->getKey() );
         $this->assertEquals( $post->getKey(), $post3->getKey() );
+        
+        $tags = $post->tags;
+        $this->assertEquals( true, $tags instanceof \ArrayAccess );
+        $this->assertEquals( 2, count( $tags ) );
+
+        $this->assertEquals( 'Tag', get_class( $tags[0] ) );
+        $this->assertEquals( $input['tag.0.1']['prop']['tag'], $tags[1]->tag );
+        $this->assertEquals( $input['tag.0.2']['prop']['tag'], $tags[0]->tag );
     }
 
     /**

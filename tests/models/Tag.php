@@ -17,7 +17,7 @@ class Tag extends Eloquent
     /**
      * @return BelongsToMany
      */
-    public function post()
+    public function posts()
     {
         return $this->belongsToMany( 'Post' );
     }
