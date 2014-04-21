@@ -22,10 +22,11 @@ class Comment extends Eloquent
      */
     public function __construct(array $attributes = array())
     {
-        $default = array(
-            'status' => self::STATUS_PUBLIC
+        $this->attributes = array(
+            'status' => self::STATUS_PUBLIC,
+            'comment' => '',
+            'post_id' => 0,
         );
-        $attributes += $default;
         parent::__construct($attributes);
     }
     

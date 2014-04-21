@@ -20,6 +20,19 @@ class Post extends Eloquent
     protected $primaryKey = 'post_id';
 
     /**
+     * @param array $attributes
+     */
+    public function __construct(array $attributes = array())
+    {
+        $this->attributes = array(
+            'status'  => self::STATUS_PUBLIC,
+            'title'   => '',
+            'content' => '',
+        );
+        parent::__construct($attributes);
+    }
+
+    /**
      * @return HasMany
      */
     public function comments()

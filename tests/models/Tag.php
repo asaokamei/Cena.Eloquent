@@ -15,6 +15,17 @@ class Tag extends Eloquent
     protected $primaryKey = 'tag_id';
 
     /**
+     * @param array $attributes
+     */
+    public function __construct(array $attributes = array())
+    {
+        $this->attributes = array(
+            'tag' => ''
+        );
+        parent::__construct($attributes);
+    }
+
+    /**
      * @return BelongsToMany
      */
     public function posts()
